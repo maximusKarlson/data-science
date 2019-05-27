@@ -39,3 +39,77 @@ scaler = StandardScaler()
 X_train = scaler.fit(X_train)
 X_test = scaler.fit(X_test)
 ```
+
+## Entscheidungsgrenzen visualisieren
+
+Als Hilfe für die Vorhersage ist es gut wenn man eine Grenze visualisieren kann die einem hilft zu unterschieden wo genau das Modell die Grenzen *gezogen* hat.  
+Dafür hilft folgende Funktion die als `helper.py` im gleichen Ordner wie das Jupyter Notebook abgespeichert werden kann und dann einfach im Notebook importiert werden kan.
+
+```python
+import matplotlib.pyplot as plt
+import seaborn as sns
+import numpy as np
+
+try:
+    get_ipython().magic('matplotlib inline')
+    get_ipython().magic('config InlineBackend.figure_formats = set(["retina"])')
+except NameError:
+    pass
+
+def plot_classifier(model, X, Z, proba = False, xlabel = None, ylabel = None):
+    # https://matplotlib.org/examples/color/colormaps_reference.html
+    plt.set_cmap("RdYlBu")
+    
+    x_min = X[:, 0].min() - 1
+    x_max = X[:, 0].max() + 1
+    
+    y_min = X[:, 1].min() - 1
+    y_max = X[:, 1].max() + 1
+    
+    xx, yy = np.meshgrid(
+        np.linspace(x_min, x_max, 1000),
+        np.linspace(y_min, y_max, 1000)
+    )
+
+    if proba:
+        zz = model.predict_proba(np.c_[xx.ravel(), yy.ravel()])[:, 1]
+        plt.imshow(zz.reshape(xx.shape), 
+                   origin = "lower", 
+                   aspect = "auto", 
+                   extent = (x_min, x_max, y_min, y_max), 
+                   vmin = 0, 
+                   vmax = 1, 
+                   alpha = 0.25)
+    else: 
+        zz = model.predict(np.c_[xx.ravel(), yy.ravel()])
+        plt.contourf(xx, yy, zz.reshape(xx.shape), 
+                     alpha = 0.25, 
+                     vmin = 0, 
+                     vmax = 1)
+
+    plt.scatter(X[:, 0], X[:, 1], c=Z)
+    
+    if xlabel is not None:
+        plt.xlabel(xlabel)
+       
+    if ylabel is not None:
+        plt.ylabel(ylabel)
+        
+    # Damit wird die Grafik genau so groß angezeigt wie der
+    # schattierte Farbbereich:
+    plt.xlim(x_min, x_max)
+    plt.ylim(y_min, y_max)
+
+    plt.show()
+```
+
+**Benutzung:**
+
+```python
+# Im notebook kann man die Funktion wie folgt importieren
+from helper import plot_classifier
+
+# Benutzung // Beispiel mit den gleichen Daten wie weiter oben beschrieben
+plot_classifier(model, X_train, y_train, proba = False, xlabel = "Alter", ylabel="Interesse")
+```
+
