@@ -110,6 +110,9 @@ def plot_classifier(model, X, Z, proba = False, xlabel = None, ylabel = None):
 from helper import plot_classifier
 
 # Benutzung // Beispiel mit den gleichen Daten wie weiter oben beschrieben
+# Modell: Blau - JA // Rot - NEIN
+# Bei Benutzung der Trainingsdaten sieht man somit direkt wo dieses Modell Fehler macht - Roter Hintergrund + Blauer Punkt etc.
+# Parameter: proba = TRUE s.u.
 plot_classifier(model, X_train, y_train, proba = False, xlabel = "Alter", ylabel="Interesse")
 ```
-
+Das mächtige an der Funktion ist, dass wir nicht nur einen 'harten' Übergang visualisieren können `proba = False`, sonder auch einen fließenden `proba = True`. Setzt man diesen Wert auf True entsteh an der Grenzlinie ein weißes Gebiet welches hilft zu verstehen an welchen Stellen das Modell `unsicher` ist.
