@@ -116,3 +116,6 @@ from helper import plot_classifier
 plot_classifier(model, X_train, y_train, proba = False, xlabel = "Alter", ylabel="Interesse")
 ```
 Das mächtige an der Funktion ist, dass wir nicht nur einen 'harten' Übergang visualisieren können `proba = False`, sonder auch einen fließenden `proba = True`. Setzt man diesen Wert auf True entsteh an der Grenzlinie ein weißes Gebiet welches hilft zu verstehen an welchen Stellen das Modell `unsicher` ist.
+
+## Klassifizierung mit mehreren Klassen
+
